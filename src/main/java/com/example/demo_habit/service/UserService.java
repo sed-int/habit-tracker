@@ -24,7 +24,7 @@ public class UserService {
         checkDuplicatedUser(email);
         String hashedPassword = passwordEncoder.encode(password);
 
-        User user = new User(email, password);
+        User user = new User(email, hashedPassword);
         userRepository.save(user);
         return user.getId();
     }

@@ -1,11 +1,13 @@
 package com.example.demo_habit.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Component
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRequest {
     // id and many others
     private String email;

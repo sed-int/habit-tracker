@@ -5,6 +5,8 @@ import com.example.demo_habit.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +24,8 @@ public class UserController {
 
     // TODO: ResponseEntity to DTO
     @PostMapping("/users")
-    public ResponseEntity<Map<String, Long>> create(@RequestBody UserRequest user) {
-        Long id = userService.register(user.getEmail(), user.getPassword());
+    public ResponseEntity<Map<String, Long>> create(@RequestBody @Valid UserRequest request) {
+        Long id = userService.register(request);
         return ResponseEntity
             .created(URI.create("/users/" + id))
             .body(Map.of("id", id));

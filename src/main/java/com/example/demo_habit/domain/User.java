@@ -35,9 +35,27 @@ public class User {
 
     private boolean admin;
 
+    private int failedLoginAttempts;
+
     @CreatedDate
     private Instant createdAt;
     @LastModifiedDate
     private Instant updatedAt;
+
+    public void activate() {
+        this.active = true;
+        return;
+    }
+
+    public void recordLoginFailure() {
+        failedLoginAttempts++;
+        if (failedLoginAttempts >= 3) {
+            deactivate();
+        }
+    }
+
+    private void deactivate() {
+        this.active = false;
+    }
 }
 

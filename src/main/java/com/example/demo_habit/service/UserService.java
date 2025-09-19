@@ -1,6 +1,7 @@
 package com.example.demo_habit.service;
 
 import com.example.demo_habit.domain.User;
+import com.example.demo_habit.dto.UserRequest;
 import com.example.demo_habit.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
-    public Long register(String email, String password) {
+    public Long register(UserRequest request) {
         // check if email is already registered
-        checkDuplicatedUser(email);
-        String hashedPassword = passwordEncoder.encode(password);
+        checkDuplicatedUser(request.getEmail());
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
 
-        User user = new User(email, hashedPassword);
+        User user = new User(request.getEmail(), hashedPassword);
         userRepository.save(user);
         return user.getId();
     }

@@ -25,9 +25,14 @@ public class UserService {
         checkDuplicatedUser(request.getEmail());
         String hashedPassword = passwordEncoder.encode(request.getPassword());
 
-        User user = new User(request.getEmail(), hashedPassword);
-        userRepository.save(user);
-        return user.getId();
+        User user = User.builder()
+            .email(request.getEmail())
+            .passwordHash(hashedPassword)
+            .active(true)
+            .admin(false)
+            .build();
+        User savedUser = userRepository.save(user);
+        return savedUser.getId();
     }
 
     // helper method to see if user with the email exists

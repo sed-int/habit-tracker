@@ -3,17 +3,24 @@ package com.example.demo_habit.domain;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@Builder
+@EqualsAndHashCode(of = "id")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -32,15 +39,5 @@ public class User {
     private Instant createdAt;
     @LastModifiedDate
     private Instant updatedAt;
-
-    public User(String email, String passwordHash) {
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.active = true;
-        this.admin = false;
-        Instant now = Instant.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
 }
 

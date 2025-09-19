@@ -1,6 +1,7 @@
 # Habit Tracker
 
 Spring Boot 기반의 습관 추적 API 백엔드
+(이하 기능들을 구현 예정)
 
 ## 기술 스택
 
@@ -12,7 +13,7 @@ Spring Boot 기반의 습관 추적 API 백엔드
 
 ## 주요 기능
 
-- **사용자 인증**: OAuth2 (Google, Kakao, Naver) + JWT
+- **사용자 인증**: 이메일 로그인 + Google OAuth2 + JWT
 - **습관 관리**: CRUD, 태그, 즐겨찾기, 상태 관리
 - **완료 기록**: 일별 체크, 메모 추가
 - **API 문서**: OpenAPI 3 + Swagger UI
@@ -54,7 +55,9 @@ user_identity   # OAuth 연동 정보
 - `POST /habits/{id}/completions` - 완료 기록 추가
 
 ### 인증
-- `POST /auth/oauth2/callback/*` - OAuth2 콜백
+- `POST /auth/login` - 이메일 로그인
+- `POST /auth/register` - 이메일 회원가입
+- `POST /auth/oauth2/callback/google` - Google OAuth2 콜백
 - `POST /auth/token/refresh` - 토큰 갱신
 - `POST /auth/logout` - 로그아웃
 

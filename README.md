@@ -5,7 +5,7 @@ Spring Boot 기반의 습관 추적 API 백엔드
 
 ## 기술 스택
 
-- **Java 17** + **Spring Boot 3.x**
+__- **Java 25** + **Spring Boot 3.x**
 - **Spring Security** + **OAuth2** + **JWT**
 - **Spring Data JPA** + **MySQL 8.x**
 - **Redis** (토큰 관리)

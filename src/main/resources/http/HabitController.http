@@ -1,0 +1,92 @@
+### HabitController HTTP Client
+### IntelliJ HTTP Client for testing HabitController endpoints
+
+### Variables
+@baseUrl = http://localhost:8080/api/v1
+@contentType = application/json
+@userId = 1
+# Test users from data.sql:
+# userId=1: test@example.com (password: "password")
+# userId=2: admin@example.com (password: "password")
+# userId=3: user@example.com (password: "password")
+
+### Create Habit (POST /api/v1/habits)
+POST {{baseUrl}}/habits?userId={{userId}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Morning Meditation",
+  "description": "Meditate for 10 minutes every morning",
+  "tags": "health,mindfulness",
+  "star": true,
+  "periodType": "D",
+  "periodCount": 1,
+  "targetCount": 30
+}
+
+###
+
+### Create Habit - Minimal Fields
+POST {{baseUrl}}/habits?userId={{userId}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Read Books"
+}
+
+###
+
+### Create Habit - Invalid Title (should return validation error)
+POST {{baseUrl}}/habits?userId={{userId}}
+Content-Type: {{contentType}}
+
+{
+  "title": "",
+  "description": "This should fail"
+}
+
+###
+
+### Get All Habits for User (GET /api/v1/habits)
+GET {{baseUrl}}/habits?userId={{userId}}
+
+###
+
+### Get Specific Habit (GET /api/v1/habits/{id})
+GET {{baseUrl}}/habits/1?userId={{userId}}
+
+###
+
+### Update Habit (PUT /api/v1/habits/{id})
+PUT {{baseUrl}}/habits/1?userId={{userId}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Evening Meditation",
+  "description": "Meditate for 15 minutes every evening",
+  "tags": "health,mindfulness,evening",
+  "star": false,
+  "periodType": "D",
+  "periodCount": 1,
+  "targetCount": 60
+}
+
+###
+
+### Archive Habit (PATCH /api/v1/habits/{id}/archive)
+PATCH {{baseUrl}}/habits/1/archive?userId={{userId}}
+
+###
+
+### Delete Habit (DELETE /api/v1/habits/{id})
+DELETE {{baseUrl}}/habits/1?userId={{userId}}
+
+###
+
+### Expected Response Formats:
+### POST - Status: 201 Created, Location: /api/v1/habits/{id}, Body: {"id": {habit_id}}
+### GET (list) - Status: 200 OK, Body: [{habit1}, {habit2}, ...]
+### GET (single) - Status: 200 OK, Body: {habit}
+### PUT - Status: 204 No Content
+### PATCH - Status: 204 No Content
+### DELETE - Status: 204 No Content

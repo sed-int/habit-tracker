@@ -1,0 +1,86 @@
+### UserController HTTP Client
+### IntelliJ HTTP Client for testing UserController endpoints
+
+### Variables
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Create User (POST /users)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+
+### Create User - Valid Email Format
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "user@domain.com",
+  "password": "securepassword123"
+}
+
+###
+
+### Create User - Invalid Email Format (should return validation error)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid-email",
+  "password": "password123"
+}
+
+###
+
+### Create User - Short Password (should return validation error)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "123"
+}
+
+###
+
+### Create User - Missing Email (should return validation error)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "password": "password123"
+}
+
+###
+
+### Create User - Missing Password (should return validation error)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com"
+}
+
+###
+
+### Create User - Duplicate Email (should return error if user already exists)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "duplicate@example.com",
+  "password": "password123"
+}
+
+###
+
+### Expected Response Format:
+### Status: 201 Created
+### Headers: Location: /users/{id}
+### Body: {"id": {user_id}}

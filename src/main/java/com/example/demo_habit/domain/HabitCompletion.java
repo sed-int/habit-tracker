@@ -11,44 +11,29 @@ import java.time.Instant;
 @Getter
 @Builder
 @EqualsAndHashCode(of = "id")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "habits")
-public class Habit {
+@Table(name = "habit_completions")
+public class HabitCompletion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "habit_id")
+    private Habit habit;
 
-    private String title;
+    private Instant completionDate;
 
-    private String description;
+    private boolean done;
 
-    // ref "habit_status_enum" later
-    private String status;
-
-    private boolean star;
-
-    private String tags;
-
-    private Character periodType;
-
-    private long periodCount;
-
-    private long targetCount;
-
-    private long orderIndex;
+    private String note;
 
     @CreatedDate
     private Instant createdAt;
 
     @LastModifiedDate
     private Instant updatedAt;
-
 }
-

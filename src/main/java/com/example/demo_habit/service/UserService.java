@@ -6,6 +6,7 @@ import com.example.demo_habit.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    // private final MailClient
 
     @Transactional
     public Long register(UserRequest request) {
@@ -28,11 +32,17 @@ public class UserService {
         User user = User.builder()
             .email(request.getEmail())
             .passwordHash(hashedPassword)
-            .active(true)
+            .active(false)
             .admin(false)
             .build();
         User savedUser = userRepository.save(user);
+        // send confirmation mail with link
         return savedUser.getId();
+    }
+
+    public boolean confirmRegistration(String otp) {
+        // check timeout
+        return true;
     }
 
     // helper method to see if user with the email exists

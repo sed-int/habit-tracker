@@ -39,6 +39,7 @@ public class User {
 
     @CreatedDate
     private Instant createdAt;
+
     @LastModifiedDate
     private Instant updatedAt;
 

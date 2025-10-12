@@ -45,7 +45,7 @@ public class HabitService {
     public List<Habit> getHabitsByUser(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
-        return habitRepository.findByUser(user);
+        return habitRepository.findByUserAndStatus(user, "ACTIVE");
     }
 
     @Transactional(readOnly = true)
@@ -54,7 +54,7 @@ public class HabitService {
             .orElseThrow(() -> new RuntimeException("Habit not found"));
 
         // Verify ownership
-        if (!habit.getUser().getId().equals(userId)) {
+        if (!habit.isOwnedBy(userId)) {
             throw new RuntimeException("Unauthorized access to habit");
         }
 
@@ -64,63 +64,26 @@ public class HabitService {
     @Transactional
     public void updateHabit(Long habitId, Long userId, HabitRequest request) {
         Habit habit = getHabitById(habitId, userId);
-
-        // TODO: Use builder or setter methods to update fields
-        // Since Habit has no setters, we need to recreate or add update methods
-        habitRepository.save(Habit.builder()
-            .id(habit.getId())
-            .user(habit.getUser())
-            .title(request.getTitle())
-            .description(request.getDescription())
-            .tags(request.getTags() != null ? request.getTags() : "")
-            .star(request.getStar() != null ? request.getStar() : false)
-            .status(habit.getStatus())
-            .periodType(request.getPeriodType())
-            .periodCount(request.getPeriodCount() != null ? request.getPeriodCount() : 0)
-            .targetCount(request.getTargetCount() != null ? request.getTargetCount() : 0)
-            .orderIndex(habit.getOrderIndex())
-            .createdAt(habit.getCreatedAt())
-            .build());
+        habit.update(
+            request.getTitle(),
+            request.getDescription(),
+            request.getTags(),
+            request.getStar(),
+            request.getPeriodType(),
+            request.getPeriodCount(),
+            request.getTargetCount()
+        );
     }
 
     @Transactional
     public void deleteHabit(Long habitId, Long userId) {
         Habit habit = getHabitById(habitId, userId);
-
-        // Soft delete by updating status
-        habitRepository.save(Habit.builder()
-            .id(habit.getId())
-            .user(habit.getUser())
-            .title(habit.getTitle())
-            .description(habit.getDescription())
-            .tags(habit.getTags())
-            .star(habit.isStar())
-            .status("SOFT_DELETED")
-            .periodType(habit.getPeriodType())
-            .periodCount(habit.getPeriodCount())
-            .targetCount(habit.getTargetCount())
-            .orderIndex(habit.getOrderIndex())
-            .createdAt(habit.getCreatedAt())
-            .build());
+        habit.softDelete();
     }
 
     @Transactional
     public void archiveHabit(Long habitId, Long userId) {
         Habit habit = getHabitById(habitId, userId);
-
-        habitRepository.save(Habit.builder()
-            .id(habit.getId())
-            .user(habit.getUser())
-            .title(habit.getTitle())
-            .description(habit.getDescription())
-            .tags(habit.getTags())
-            .star(habit.isStar())
-            .status("ARCHIVED")
-            .periodType(habit.getPeriodType())
-            .periodCount(habit.getPeriodCount())
-            .targetCount(habit.getTargetCount())
-            .orderIndex(habit.getOrderIndex())
-            .createdAt(habit.getCreatedAt())
-            .build());
+        habit.archive();
     }
 }

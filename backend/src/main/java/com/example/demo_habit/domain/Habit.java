@@ -50,5 +50,32 @@ public class Habit {
     @LastModifiedDate
     private Instant updatedAt;
 
+    // Business methods
+    public void archive() {
+        this.status = "ARCHIVED";
+    }
+
+    public void softDelete() {
+        this.status = "SOFT_DELETED";
+    }
+
+    public void update(String title, String description, String tags, Boolean star,
+                      Character periodType, Long periodCount, Long targetCount) {
+        this.title = title;
+        this.description = description;
+        this.tags = tags != null ? tags : "";
+        this.star = star != null ? star : false;
+        this.periodType = periodType;
+        this.periodCount = periodCount != null ? periodCount : 0;
+        this.targetCount = targetCount != null ? targetCount : 0;
+    }
+
+    public boolean isOwnedBy(Long userId) {
+        return this.user.getId().equals(userId);
+    }
+
+    public boolean isActive() {
+        return "ACTIVE".equals(this.status);
+    }
 }
 

@@ -1,0 +1,36 @@
+### Create a new habit completion
+POST http://localhost:8080/api/v1/habit-completions?userId=1
+Content-Type: application/json
+
+{
+  "habitId": 1,
+  "completionDate": "2025-01-15T10:00:00Z",
+  "done": true,
+  "note": "Completed morning workout"
+}
+
+### Get all completions for a habit
+GET http://localhost:8080/api/v1/habit-completions/habit/1?userId=1
+
+### Get completions for a habit within date range
+GET http://localhost:8080/api/v1/habit-completions/habit/1/range?userId=1&startDate=2025-01-01T00:00:00Z&endDate=2025-01-31T23:59:59Z
+
+### Get a specific completion by ID
+GET http://localhost:8080/api/v1/habit-completions/1?userId=1
+
+### Update a habit completion
+PUT http://localhost:8080/api/v1/habit-completions/1?userId=1
+Content-Type: application/json
+
+{
+  "habitId": 1,
+  "completionDate": "2025-01-15T10:00:00Z",
+  "done": true,
+  "note": "Updated: Completed morning workout with extra cardio"
+}
+
+### Delete a habit completion
+DELETE http://localhost:8080/api/v1/habit-completions/1?userId=1
+
+### Get completion count for a habit
+GET http://localhost:8080/api/v1/habit-completions/habit/1/count?userId=1

@@ -1,0 +1,17 @@
+# Root-level gitignore for monorepo
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+build/
+.gradle/
+
+# Logs
+*.log

@@ -6,8 +6,10 @@ import com.example.demo_habit.service.HabitCompletionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.time.Instant;
@@ -57,7 +59,8 @@ public class HabitCompletionController {
             @PathVariable Long id,
             @RequestParam Long userId) {
         // This method still needs entity, so we'll skip DTO for now
-        throw new RuntimeException("Not implemented");
+        throw new ResponseStatusException(
+                HttpStatus.NOT_IMPLEMENTED, "Not implemented");
     }
 
     @PutMapping("/{id}")

@@ -7,8 +7,10 @@ import com.example.demo_habit.service.AuthService;
 import com.example.demo_habit.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.Map;
@@ -44,6 +46,7 @@ public class AuthController {
     // TODO: Implement refresh token mechanism
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refreshAccessToken() {
-        throw new RuntimeException("Refresh token not yet implemented");
+        throw new ResponseStatusException(
+                HttpStatus.NOT_IMPLEMENTED, "Refresh token not yet implemented");
     }
 }

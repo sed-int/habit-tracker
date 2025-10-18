@@ -8,8 +8,10 @@ import com.example.demo_habit.repository.HabitCompletionRepository;
 import com.example.demo_habit.repository.HabitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -25,17 +27,20 @@ public class HabitCompletionService {
     @Transactional
     public Long createCompletion(Long userId, HabitCompletionRequest request) {
         Habit habit = habitRepository.findById(request.getHabitId())
-            .orElseThrow(() -> new RuntimeException("Habit not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Habit not found"));
 
         // Verify ownership
         if (!habit.isOwnedBy(userId)) {
-            throw new RuntimeException("Unauthorized access to habit");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Unauthorized access to habit");
         }
 
         // Check if completion already exists for this date
         habitCompletionRepository.findByHabitAndCompletionDate(habit, request.getCompletionDate())
             .ifPresent(existing -> {
-                throw new RuntimeException("Completion already exists for this date");
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT, "Completion already exists for this date");
             });
 
         HabitCompletion completion = HabitCompletion.builder()
@@ -52,11 +57,13 @@ public class HabitCompletionService {
     @Transactional(readOnly = true)
     public List<HabitCompletionResponse> getCompletionsByHabit(Long habitId, Long userId) {
         Habit habit = habitRepository.findById(habitId)
-            .orElseThrow(() -> new RuntimeException("Habit not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Habit not found"));
 
         // Verify ownership
         if (!habit.isOwnedBy(userId)) {
-            throw new RuntimeException("Unauthorized access to habit");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Unauthorized access to habit");
         }
 
         return habitCompletionRepository.findByHabit(habit).stream()
@@ -68,11 +75,13 @@ public class HabitCompletionService {
     public List<HabitCompletionResponse> getCompletionsByHabitAndDateRange(
         Long habitId, Long userId, Instant startDate, Instant endDate) {
         Habit habit = habitRepository.findById(habitId)
-            .orElseThrow(() -> new RuntimeException("Habit not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Habit not found"));
 
         // Verify ownership
         if (!habit.isOwnedBy(userId)) {
-            throw new RuntimeException("Unauthorized access to habit");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Unauthorized access to habit");
         }
 
         return habitCompletionRepository.findByHabitAndCompletionDateBetween(habit, startDate, endDate).stream()
@@ -95,11 +104,13 @@ public class HabitCompletionService {
     @Transactional(readOnly = true)
     public HabitCompletion getCompletionById(Long completionId, Long userId) {
         HabitCompletion completion = habitCompletionRepository.findById(completionId)
-            .orElseThrow(() -> new RuntimeException("Habit completion not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Habit completion not found"));
 
         // Verify ownership through habit
         if (!completion.getHabit().isOwnedBy(userId)) {
-            throw new RuntimeException("Unauthorized access to habit completion");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Unauthorized access to habit completion");
         }
 
         return completion;
@@ -131,11 +142,13 @@ public class HabitCompletionService {
     @Transactional(readOnly = true)
     public long getCompletionCount(Long habitId, Long userId) {
         Habit habit = habitRepository.findById(habitId)
-            .orElseThrow(() -> new RuntimeException("Habit not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Habit not found"));
 
         // Verify ownership
         if (!habit.isOwnedBy(userId)) {
-            throw new RuntimeException("Unauthorized access to habit");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Unauthorized access to habit");
         }
 
         return habitCompletionRepository.countByHabitAndDoneTrue(habit);

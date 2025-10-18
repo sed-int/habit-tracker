@@ -7,8 +7,10 @@ import com.example.demo_habit.repository.HabitRepository;
 import com.example.demo_habit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,7 +24,8 @@ public class HabitService {
     @Transactional
     public Long createHabit(Long userId, HabitRequest request) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found"));
 
         Habit habit = Habit.builder()
             .user(user)
@@ -44,18 +47,21 @@ public class HabitService {
     @Transactional(readOnly = true)
     public List<Habit> getHabitsByUser(Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found"));
         return habitRepository.findByUserAndStatus(user, "ACTIVE");
     }
 
     @Transactional(readOnly = true)
     public Habit getHabitById(Long habitId, Long userId) {
         Habit habit = habitRepository.findById(habitId)
-            .orElseThrow(() -> new RuntimeException("Habit not found"));
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Habit not found"));
 
         // Verify ownership
         if (!habit.isOwnedBy(userId)) {
-            throw new RuntimeException("Unauthorized access to habit");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Unauthorized access to habit");
         }
 
         return habit;

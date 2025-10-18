@@ -7,9 +7,11 @@ import com.example.demo_habit.dto.LoginResponse;
 import com.example.demo_habit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,11 +25,13 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         // Find user by email
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 
         // Check if user is active
         if (!user.isActive()) {
-            throw new RuntimeException("Account is deactivated");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Account is deactivated");
         }
 
         // Verify password
@@ -35,7 +39,8 @@ public class AuthService {
             // Record failed login attempt
             user.recordLoginFailure();
             userRepository.save(user);
-            throw new RuntimeException("Invalid email or password");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
         // Generate JWT token
@@ -54,6 +59,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found"));
     }
 }

@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
             ResponseStatusException ex, WebRequest request) {
         log.error("ResponseStatusException: {}", ex.getReason(), ex);
 
-        ProblemDetail problemDetail = ProblemDOetail.forStatusAndDetail(
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
                 ex.getStatusCode(),
                 ex.getReason() != null ? ex.getReason() : "An error occurred"
         );

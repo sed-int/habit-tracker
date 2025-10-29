@@ -8,6 +8,9 @@ import com.example.demo_habit.repository.HabitCompletionRepository;
 import com.example.demo_habit.repository.HabitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,10 @@ public class HabitCompletionService {
     private final HabitRepository habitRepository;
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "completions", key = "#request.habitId"),
+        @CacheEvict(value = "completionCounts", key = "#request.habitId")
+    })
     public Long createCompletion(Long userId, HabitCompletionRequest request) {
         Habit habit = habitRepository.findById(request.getHabitId())
             .orElseThrow(() -> new ResponseStatusException(
@@ -55,6 +62,7 @@ public class HabitCompletionService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "completions", key = "#habitId")
     public List<HabitCompletionResponse> getCompletionsByHabit(Long habitId, Long userId) {
         Habit habit = habitRepository.findById(habitId)
             .orElseThrow(() -> new ResponseStatusException(
@@ -117,6 +125,10 @@ public class HabitCompletionService {
     }
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "completions", key = "#request.habitId"),
+        @CacheEvict(value = "completionCounts", key = "#request.habitId")
+    })
     public void updateCompletion(Long completionId, Long userId, HabitCompletionRequest request) {
         HabitCompletion completion = getCompletionById(completionId, userId);
 
@@ -134,12 +146,17 @@ public class HabitCompletionService {
     }
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "completions", allEntries = true),
+        @CacheEvict(value = "completionCounts", allEntries = true)
+    })
     public void deleteCompletion(Long completionId, Long userId) {
         HabitCompletion completion = getCompletionById(completionId, userId);
         habitCompletionRepository.delete(completion);
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "completionCounts", key = "#habitId")
     public long getCompletionCount(Long habitId, Long userId) {
         Habit habit = habitRepository.findById(habitId)
             .orElseThrow(() -> new ResponseStatusException(

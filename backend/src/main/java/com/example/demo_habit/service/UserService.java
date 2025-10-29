@@ -7,6 +7,8 @@ import com.example.demo_habit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +28,7 @@ public class UserService {
     // private final MailClient
 
     @Transactional
+    @CacheEvict(value = "usersByEmail", allEntries = true)
     public Long register(UserRequest request) {
         // check if email is already registered
         checkDuplicatedUser(request.getEmail());
@@ -54,6 +57,7 @@ public class UserService {
         }
     }
 
+    @Cacheable(value = "users", key = "#id")
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }

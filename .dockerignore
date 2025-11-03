@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+*.iml
+*.swp
+*.swo
+
+# Build artifacts
+**/build/
+**/target/
+**/.gradle/
+**/node_modules/
+**/dist/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Redis data
+dump.rdb
+appendonly.aof
+*.rdb
+
+# Documentation
+README.md
+DOCKER.md
+*.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Tests
+**/test-results/
+**/coverage/

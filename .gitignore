@@ -15,3 +15,8 @@ build/
 
 # Logs
 *.log
+
+# Redis
+dump.rdb
+appendonly.aof
+*.rdb

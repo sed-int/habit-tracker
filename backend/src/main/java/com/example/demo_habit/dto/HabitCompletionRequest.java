@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ public class HabitCompletionRequest {
     private Long habitId;
 
     @NotNull(message = "Completion date is required")
-    private Instant completionDate;
+    private LocalDateTime completionDate;
 
     @NotNull(message = "Done status is required")
     private Boolean done;

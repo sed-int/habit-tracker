@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
                 ex.getStatusCode(),
                 ex.getReason() != null ? ex.getReason() : "An error occurred"
         );
-        problemDetail.setProperty("timestamp", Instant.now());
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
 
         return ResponseEntity.status(ex.getStatusCode()).body(problemDetail);
     }
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Validation failed"
         );
-        problemDetail.setProperty("timestamp", Instant.now());
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
         problemDetail.setProperty("errors", errors);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "An unexpected error occurred"
         );
-        problemDetail.setProperty("timestamp", Instant.now());
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail);
     }

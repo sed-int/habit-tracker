@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,7 +81,7 @@ public class HabitCompletionService {
 
     @Transactional(readOnly = true)
     public List<HabitCompletionResponse> getCompletionsByHabitAndDateRange(
-        Long habitId, Long userId, Instant startDate, Instant endDate) {
+        Long habitId, Long userId, LocalDateTime startDate, LocalDateTime endDate) {
         Habit habit = habitRepository.findById(habitId)
             .orElseThrow(() -> new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Habit not found"));

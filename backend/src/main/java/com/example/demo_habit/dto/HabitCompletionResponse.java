@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,9 +16,9 @@ import java.time.Instant;
 public class HabitCompletionResponse {
     private Long id;
     private Long habitId;
-    private Instant completionDate;
+    private LocalDateTime completionDate;
     private boolean done;
     private String note;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
